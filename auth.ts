@@ -18,8 +18,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
       return false
     },
+    async jwt({ token, profile }) {
+      // ログイン時に Discord の ID (profile.id) をトークンに保存
+      if (profile) {
+        token.sub = profile.id
+      }
+      return token
+    },
     async session({ session, token }) {
       if (session.user && token.sub) {
+        // トークンの sub (Discord ID) をセッションのユーザー ID として使用
         session.user.id = token.sub
       }
       return session
