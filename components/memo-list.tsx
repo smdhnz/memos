@@ -11,13 +11,6 @@ import { cn } from "@/lib/utils"
 import { useIsMobile } from "@/hooks/use-is-mobile"
 import type { Memo } from "@/lib/db/schema"
 import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog"
-import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -173,52 +166,25 @@ function ImagePreview({
   const [isLoaded, setIsLoaded] = useState(false)
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <div className="relative h-32 w-fit shrink-0 cursor-zoom-in overflow-hidden rounded-md border border-muted/20 bg-muted/5">
-          {!isLoaded && <Skeleton className="absolute inset-0 h-full w-full" />}
-          <Image
-            src={proxyUrl}
-            alt={alt}
-            width={0}
-            height={0}
-            sizes="100vw"
-            style={{ width: "auto", height: "100%" }}
-            className={cn(
-              "transition-all duration-500 hover:opacity-90",
-              isLoaded ? "opacity-100" : "opacity-0"
-            )}
-            onLoad={() => setIsLoaded(true)}
-            onError={() => setIsLoaded(true)}
-            unoptimized
-            priority={priority}
-          />
-        </div>
-      </DialogTrigger>
-      <DialogContent className="flex max-h-[95vh] max-w-[95vw] items-center justify-center border-none bg-transparent p-0 shadow-none outline-none">
-        <DialogTitle className="sr-only">画像プレビュー</DialogTitle>
-        <DialogDescription className="sr-only">
-          拡大された画像を表示しています。
-        </DialogDescription>
-        <div className="relative flex h-full w-full items-center justify-center">
-          <Image
-            src={proxyUrl}
-            alt={alt}
-            width={0}
-            height={0}
-            sizes="100vw"
-            style={{
-              width: "auto",
-              height: "auto",
-              maxWidth: "100%",
-              maxHeight: "90vh",
-            }}
-            className="rounded-md shadow-2xl"
-            unoptimized
-          />
-        </div>
-      </DialogContent>
-    </Dialog>
+    <div className="relative h-32 w-fit shrink-0 overflow-hidden rounded-md border border-muted/20 bg-muted/5">
+      {!isLoaded && <Skeleton className="absolute inset-0 h-full w-full" />}
+      <Image
+        src={proxyUrl}
+        alt={alt}
+        width={0}
+        height={0}
+        sizes="100vw"
+        style={{ width: "auto", height: "100%" }}
+        className={cn(
+          "transition-all duration-500",
+          isLoaded ? "opacity-100" : "opacity-0"
+        )}
+        onLoad={() => setIsLoaded(true)}
+        onError={() => setIsLoaded(true)}
+        unoptimized
+        priority={priority}
+      />
+    </div>
   )
 }
 

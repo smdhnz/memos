@@ -146,6 +146,7 @@ export function MemoInput({
               />
               <div className="absolute inset-0 flex items-center justify-center gap-1 bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
                 <Button
+                  type="button"
                   variant="ghost"
                   size="icon"
                   className="h-6 w-6 text-white hover:bg-white/20"
@@ -155,6 +156,7 @@ export function MemoInput({
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
                 <Button
+                  type="button"
                   variant="ghost"
                   size="icon"
                   className="h-6 w-6 text-white hover:bg-white/20"
@@ -163,6 +165,7 @@ export function MemoInput({
                   <X className="h-4 w-4" />
                 </Button>
                 <Button
+                  type="button"
                   variant="ghost"
                   size="icon"
                   className="h-6 w-6 text-white hover:bg-white/20"
@@ -184,8 +187,10 @@ export function MemoInput({
           className="hidden"
           ref={fileInputRef}
           onChange={handleFileChange}
+          tabIndex={-1}
         />
         <Button
+          type="button"
           variant="ghost"
           size="icon"
           className="h-9 w-9 shrink-0 text-muted-foreground hover:bg-muted"
@@ -205,6 +210,7 @@ export function MemoInput({
           rows={1}
         />
         <Button
+          type="button"
           size="icon"
           className="h-9 w-9 shrink-0 rounded-xl shadow-sm transition-all active:scale-95"
           disabled={loading || (!content.trim() && attachments.length === 0)}
