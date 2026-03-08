@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, Fragment, useEffect, useRef } from "react"
+import { useState, Fragment, useEffect } from "react"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Trash2, Copy, Check, Loader2 } from "lucide-react"
 import { deleteMemo } from "@/lib/actions"
@@ -173,29 +174,26 @@ function MemoItem({ memo }: { memo: Memo }) {
 function ImagePreview({ url, alt }: { url: string; alt: string }) {
   const proxyUrl = `/api/blob?url=${encodeURIComponent(url)}`
   const [isLoaded, setIsLoaded] = useState(false)
-  const imgRef = useRef<HTMLImageElement>(null)
-
-  useEffect(() => {
-    if (imgRef.current?.complete) {
-      setIsLoaded(true)
-    }
-  }, [])
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <div className="relative h-32 min-w-[128px] shrink-0 cursor-zoom-in overflow-hidden rounded-md border border-muted/20 bg-muted/5">
+        <div className="relative h-32 w-fit shrink-0 cursor-zoom-in overflow-hidden rounded-md border border-muted/20 bg-muted/5">
           {!isLoaded && <Skeleton className="absolute inset-0 h-full w-full" />}
-          <img
-            ref={imgRef}
+          <Image
             src={proxyUrl}
             alt={alt}
+            width={0}
+            height={0}
+            sizes="100vw"
+            style={{ width: "auto", height: "100%" }}
             className={cn(
-              "h-32 w-auto object-contain transition-all duration-500 hover:opacity-90",
+              "transition-all duration-500 hover:opacity-90",
               isLoaded ? "opacity-100" : "opacity-0"
             )}
             onLoad={() => setIsLoaded(true)}
             onError={() => setIsLoaded(true)}
+            unoptimized
           />
         </div>
       </DialogTrigger>
@@ -204,11 +202,23 @@ function ImagePreview({ url, alt }: { url: string; alt: string }) {
         <DialogDescription className="sr-only">
           拡大された画像を表示しています。
         </DialogDescription>
-        <img
-          src={proxyUrl}
-          alt={alt}
-          className="max-h-[90vh] w-auto rounded-md object-contain shadow-2xl"
-        />
+        <div className="relative flex h-full w-full items-center justify-center">
+          <Image
+            src={proxyUrl}
+            alt={alt}
+            width={0}
+            height={0}
+            sizes="100vw"
+            style={{
+              width: "auto",
+              height: "auto",
+              maxWidth: "100%",
+              maxHeight: "90vh",
+            }}
+            className="rounded-md shadow-2xl"
+            unoptimized
+          />
+        </div>
       </DialogContent>
     </Dialog>
   )

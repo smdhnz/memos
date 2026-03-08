@@ -27,7 +27,7 @@ export default async function Home() {
         <MemoList memos={userMemos} />
       </main>
 
-      <footer className="sticky bottom-0 z-50 w-full bg-gradient-to-t from-background via-background to-transparent sm:p-4 p-0 sm:pt-10">
+      <footer className="sticky bottom-0 z-50 w-full bg-gradient-to-t from-background via-background to-transparent p-0 sm:p-4 sm:pt-10">
         <div className="mx-auto max-w-3xl">
           <MemoInput />
         </div>

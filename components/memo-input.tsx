@@ -181,7 +181,7 @@ export function MemoInput({
   }
 
   return (
-    <div className="flex w-full flex-col gap-2 sm:rounded-2xl rounded-none sm:border border-x-0 border-b-0 bg-background/80 p-2 shadow-sm backdrop-blur-sm transition-all focus-within:ring-1 focus-within:ring-ring">
+    <div className="flex w-full flex-col gap-2 rounded-none border-x-0 border-b-0 bg-background/80 p-2 pb-[calc(2.5rem+env(safe-area-inset-bottom))] shadow-sm backdrop-blur-sm transition-all focus-within:ring-1 focus-within:ring-ring sm:rounded-2xl sm:border sm:pb-2">
       {previews.length > 0 && (
         <div className="mt-1 ml-2 flex flex-wrap gap-2">
           {previews.map((url, i) => (
@@ -243,7 +243,7 @@ export function MemoInput({
         <Textarea
           ref={textareaRef}
           placeholder={placeholder}
-          className="max-h-[200px] min-h-[40px] flex-1 resize-none border-none bg-transparent px-1 py-2.5 text-sm leading-relaxed shadow-none focus-visible:ring-0"
+          className="max-h-[200px] min-h-[40px] flex-1 resize-none border-none bg-transparent px-1 py-2.5 text-base leading-relaxed shadow-none focus-visible:ring-0 sm:text-sm"
           value={content}
           onChange={(e) => setContent(e.target.value)}
           onKeyDown={handleKeyDown}
