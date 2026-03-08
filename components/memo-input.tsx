@@ -181,7 +181,7 @@ export function MemoInput({
   }
 
   return (
-    <div className="flex w-full flex-col gap-2 rounded-2xl border bg-background/80 p-2 shadow-sm backdrop-blur-sm transition-all focus-within:ring-1 focus-within:ring-ring">
+    <div className="flex w-full flex-col gap-2 sm:rounded-2xl rounded-none sm:border border-x-0 border-b-0 bg-background/80 p-2 shadow-sm backdrop-blur-sm transition-all focus-within:ring-1 focus-within:ring-ring">
       {previews.length > 0 && (
         <div className="mt-1 ml-2 flex flex-wrap gap-2">
           {previews.map((url, i) => (
