@@ -1,7 +1,7 @@
 import { auth } from "@/auth"
 import { db } from "@/lib/db"
 import { memos } from "@/lib/db/schema"
-import { eq, asc } from "drizzle-orm"
+import { eq, desc } from "drizzle-orm"
 import { Navbar } from "@/components/navbar"
 import { MemoList } from "@/components/memo-list"
 import { MemoInput } from "@/components/memo-input"
@@ -13,7 +13,7 @@ export default async function Home() {
   const userMemos = session?.user?.id
     ? await db.query.memos.findMany({
         where: eq(memos.userId, session.user.id),
-        orderBy: [asc(memos.createdAt)],
+        orderBy: [desc(memos.createdAt)],
       })
     : []
 
@@ -26,8 +26,8 @@ export default async function Home() {
         </Container>
       </header>
 
-      {/* ScrollArea を廃止し、標準のスクロールを使用 */}
-      <main className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto pt-6 pb-20">
+      {/* flex-col-reverse を使用して下から表示 */}
+      <main className="flex min-h-0 flex-1 flex-col-reverse overflow-x-hidden overflow-y-auto pt-6 pb-20">
         <Container className="px-3 sm:px-4">
           <MemoList memos={userMemos} />
         </Container>

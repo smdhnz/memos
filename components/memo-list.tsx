@@ -22,7 +22,7 @@ interface MemoListProps {
 
 export function MemoList({ memos }: MemoListProps) {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col-reverse">
       {memos.map((memo, index) => (
         <Fragment key={memo.id}>
           <MemoItem memo={memo} isPriority={index < 3} />
