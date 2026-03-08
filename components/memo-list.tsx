@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, Fragment, useEffect } from "react"
+import { useState, Fragment } from "react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Trash2, Copy, Check, Loader2 } from "lucide-react"
@@ -8,6 +8,8 @@ import { deleteMemo } from "@/lib/actions"
 import { toast } from "sonner"
 import { Skeleton } from "@/components/ui/skeleton"
 import { cn } from "@/lib/utils"
+import { useIsMobile } from "@/hooks/use-is-mobile"
+import type { Memo } from "@/lib/db/schema"
 import {
   Dialog,
   DialogContent,
@@ -21,13 +23,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-interface Memo {
-  id: string
-  content: string
-  imageUrls: string[]
-  createdAt: Date
-}
-
 interface MemoListProps {
   memos: Memo[]
 }
@@ -37,7 +32,7 @@ export function MemoList({ memos }: MemoListProps) {
     <div className="flex flex-col pb-40">
       {memos.map((memo, index) => (
         <Fragment key={memo.id}>
-          <MemoItem memo={memo} />
+          <MemoItem memo={memo} isPriority={index < 3} />
           {index < memos.length - 1 && (
             <div className="w-full border-b border-border/80" />
           )}
@@ -52,21 +47,10 @@ export function MemoList({ memos }: MemoListProps) {
   )
 }
 
-function MemoItem({ memo }: { memo: Memo }) {
+function MemoItem({ memo, isPriority }: { memo: Memo; isPriority?: boolean }) {
   const [isDeleting, setIsDeleting] = useState(false)
   const [popoverOpen, setPopoverOpen] = useState(false)
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  const checkIsMobile = () => {
-    if (typeof window === "undefined") return false
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-      navigator.userAgent
-    )
-  }
+  const { isMobile, mounted } = useIsMobile()
 
   async function handleDelete() {
     setIsDeleting(true)
@@ -82,7 +66,7 @@ function MemoItem({ memo }: { memo: Memo }) {
   }
 
   const triggerDelete = () => {
-    if (checkIsMobile()) {
+    if (isMobile) {
       if (confirm("このメッセージを削除しますか？")) {
         handleDelete()
       }
@@ -103,7 +87,12 @@ function MemoItem({ memo }: { memo: Memo }) {
         {memo.imageUrls && memo.imageUrls.length > 0 && (
           <div className="scrollbar-hide no-scrollbar flex flex-nowrap gap-2 overflow-x-auto pt-1 pb-2">
             {memo.imageUrls.map((url, i) => (
-              <ImagePreview key={i} url={url} alt={`memo image ${i}`} />
+              <ImagePreview
+                key={i}
+                url={url}
+                alt={`memo image ${i}`}
+                priority={isPriority && i === 0}
+              />
             ))}
           </div>
         )}
@@ -118,7 +107,7 @@ function MemoItem({ memo }: { memo: Memo }) {
           >
             <Trash2 className="h-4 w-4" />
           </Button>
-        ) : checkIsMobile() ? (
+        ) : isMobile ? (
           <Button
             variant="ghost"
             size="icon"
@@ -171,7 +160,15 @@ function MemoItem({ memo }: { memo: Memo }) {
   )
 }
 
-function ImagePreview({ url, alt }: { url: string; alt: string }) {
+function ImagePreview({
+  url,
+  alt,
+  priority,
+}: {
+  url: string
+  alt: string
+  priority?: boolean
+}) {
   const proxyUrl = `/api/blob?url=${encodeURIComponent(url)}`
   const [isLoaded, setIsLoaded] = useState(false)
 
@@ -194,6 +191,7 @@ function ImagePreview({ url, alt }: { url: string; alt: string }) {
             onLoad={() => setIsLoaded(true)}
             onError={() => setIsLoaded(true)}
             unoptimized
+            priority={priority}
           />
         </div>
       </DialogTrigger>

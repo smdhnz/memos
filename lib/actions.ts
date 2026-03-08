@@ -8,6 +8,27 @@ import { put, del } from "@vercel/blob"
 import { eq, and } from "drizzle-orm"
 import sharp from "sharp"
 
+/**
+ * サーバー側で画像をWebPに変換し、Blobに保存する
+ */
+async function processAndUploadImage(file: File): Promise<string> {
+  if (file.size === 0) return ""
+
+  const buffer = Buffer.from(await file.arrayBuffer())
+  const compressedBuffer = await sharp(buffer)
+    .resize(1920, 1080, { fit: "inside", withoutEnlargement: true })
+    .rotate()
+    .webp({ quality: 80 })
+    .toBuffer()
+
+  const fileName = `${Date.now()}-${file.name.replace(/\.[^/.]+$/, "")}.webp`
+  const { url } = await put(`memos/${fileName}`, compressedBuffer, {
+    access: "private",
+    contentType: "image/webp",
+  })
+  return url
+}
+
 export async function upsertMemo(formData: FormData) {
   const session = await auth()
   if (!session?.user?.id) throw new Error("Unauthorized")
@@ -17,44 +38,26 @@ export async function upsertMemo(formData: FormData) {
   const files = formData.getAll("files") as File[]
   const existingImageUrls = (formData.getAll("imageUrls") as string[]) || []
 
-  const newImageUrls: string[] = []
-
-  // 複数画像の並列処理
-  await Promise.all(
-    files.map(async (file) => {
-      if (file.size > 0) {
-        const buffer = Buffer.from(await file.arrayBuffer())
-        const compressedBuffer = await sharp(buffer)
-          .resize(1920, 1080, { fit: "inside", withoutEnlargement: true })
-          .rotate()
-          .webp({ quality: 80 })
-          .toBuffer()
-
-        const fileName = `${Date.now()}-${file.name.replace(/\.[^/.]+$/, "")}.webp`
-        const { url } = await put(`memos/${fileName}`, compressedBuffer, {
-          access: "private",
-          contentType: "image/webp",
-        })
-        newImageUrls.push(url)
-      }
-    })
+  // 順序を維持して画像を処理
+  const newImageUrls = await Promise.all(
+    files.map((file) => processAndUploadImage(file))
   )
 
-  const finalImageUrls = [...existingImageUrls, ...newImageUrls]
+  const imageUrls = [...existingImageUrls, ...newImageUrls].filter(Boolean)
 
   if (id) {
     await db
       .update(memos)
       .set({
         content,
-        imageUrls: finalImageUrls,
+        imageUrls,
         updatedAt: new Date(),
       })
       .where(and(eq(memos.id, id), eq(memos.userId, session.user.id)))
   } else {
     await db.insert(memos).values({
       content,
-      imageUrls: finalImageUrls,
+      imageUrls,
       userId: session.user.id,
     })
   }
