@@ -18,21 +18,22 @@ export default async function Home() {
     : []
 
   return (
-    <div className="relative flex min-h-screen flex-col bg-background">
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <div className="flex h-[100dvh] w-full max-w-full flex-col overflow-hidden overscroll-none bg-background">
+      <header className="z-50 shrink-0 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <Container className="flex h-14 items-center justify-between">
           <h1 className="text-lg font-bold tracking-tight">Memos</h1>
           <Navbar />
         </Container>
       </header>
 
-      <main className="flex-1 pt-6">
-        <Container>
+      {/* ScrollArea を廃止し、標準のスクロールを使用 */}
+      <main className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto pt-6 pb-20">
+        <Container className="px-3 sm:px-4">
           <MemoList memos={userMemos} />
         </Container>
       </main>
 
-      <footer className="sticky bottom-0 z-50 w-full bg-gradient-to-t from-background via-background to-transparent p-0 sm:p-4 sm:pt-10">
+      <footer className="z-50 shrink-0 bg-background sm:p-4 sm:pt-0">
         <Container className="px-0 sm:px-4">
           <MemoInput />
         </Container>

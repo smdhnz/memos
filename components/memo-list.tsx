@@ -29,7 +29,7 @@ interface MemoListProps {
 
 export function MemoList({ memos }: MemoListProps) {
   return (
-    <div className="flex flex-col pb-40">
+    <div className="flex flex-col">
       {memos.map((memo, index) => (
         <Fragment key={memo.id}>
           <MemoItem memo={memo} isPriority={index < 3} />
@@ -76,10 +76,10 @@ function MemoItem({ memo, isPriority }: { memo: Memo; isPriority?: boolean }) {
   }
 
   return (
-    <div className="group relative flex items-start gap-4 p-4 transition-all hover:bg-muted/10">
-      <div className="min-w-0 flex-1 space-y-2">
+    <div className="group relative flex w-full max-w-full items-start gap-2 p-3 transition-all hover:bg-muted/10 sm:gap-4 sm:p-4">
+      <div className="min-w-0 flex-1 space-y-2 overflow-hidden break-all">
         {memo.content && (
-          <div className="text-sm leading-relaxed break-words whitespace-pre-wrap text-foreground/90">
+          <div className="text-sm leading-relaxed whitespace-pre-wrap text-foreground/90">
             <ContentRenderer content={memo.content} />
           </div>
         )}
@@ -98,7 +98,7 @@ function MemoItem({ memo, isPriority }: { memo: Memo; isPriority?: boolean }) {
         )}
       </div>
 
-      <div className="flex shrink-0 items-center gap-1 transition-opacity md:opacity-0 md:group-hover:opacity-100">
+      <div className="flex shrink-0 items-center justify-end gap-1 transition-opacity md:opacity-0 md:group-hover:opacity-100">
         {!mounted ? (
           <Button
             variant="ghost"

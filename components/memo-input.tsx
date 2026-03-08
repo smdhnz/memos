@@ -130,7 +130,7 @@ export function MemoInput({
   }
 
   return (
-    <div className="flex w-full flex-col gap-2 rounded-none border-x-0 border-b-0 bg-background/80 p-1 pb-[calc(1.25rem+env(safe-area-inset-bottom))] shadow-sm backdrop-blur-sm transition-all focus-within:ring-1 focus-within:ring-ring sm:rounded-2xl sm:border sm:p-2">
+    <div className="flex w-full flex-col gap-2 rounded-none border-x-0 border-b-0 bg-background/80 p-2 pb-[calc(2.5rem+env(safe-area-inset-bottom))] shadow-sm backdrop-blur-sm transition-all focus-within:px-2 focus-within:py-2 focus-within:pb-[calc(0.5rem+env(safe-area-inset-bottom))] sm:rounded-2xl sm:border sm:p-2">
       {attachments.length > 0 && (
         <div className="mt-1 ml-2 flex flex-wrap gap-2">
           {attachments.map((a, i) => (
@@ -197,7 +197,7 @@ export function MemoInput({
         <Textarea
           ref={textareaRef}
           placeholder={placeholder}
-          className="max-h-[200px] min-h-[40px] flex-1 resize-none border-none bg-transparent px-1 py-1 text-base leading-relaxed shadow-none focus-visible:ring-0 sm:py-2.5 sm:text-sm"
+          className="max-h-[200px] min-h-[40px] flex-1 resize-none border-none bg-transparent px-1 py-2.5 text-base leading-relaxed shadow-none focus-visible:ring-0 sm:text-sm"
           value={content}
           onChange={(e) => setContent(e.target.value)}
           onKeyDown={handleKeyDown}
@@ -206,7 +206,7 @@ export function MemoInput({
         />
         <Button
           size="icon"
-          className="h-9 w-9 shrink-0 rounded-xl transition-all"
+          className="h-9 w-9 shrink-0 rounded-xl shadow-sm transition-all active:scale-95"
           disabled={loading || (!content.trim() && attachments.length === 0)}
           onClick={handleSubmit}
         >
