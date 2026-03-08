@@ -97,7 +97,6 @@ function MemoItem({ memo, isPriority }: { memo: Memo; isPriority?: boolean }) {
             variant="ghost"
             size="icon"
             className="h-8 w-8 text-muted-foreground"
-            tabIndex={-1}
           >
             <Trash2 className="h-4 w-4" />
           </Button>
@@ -107,7 +106,6 @@ function MemoItem({ memo, isPriority }: { memo: Memo; isPriority?: boolean }) {
             size="icon"
             className="h-8 w-8 text-muted-foreground"
             onClick={triggerDelete}
-            tabIndex={-1}
           >
             <Trash2 className="h-4 w-4" />
           </Button>
@@ -118,7 +116,6 @@ function MemoItem({ memo, isPriority }: { memo: Memo; isPriority?: boolean }) {
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                tabIndex={-1}
               >
                 <Trash2 className="h-4 w-4" />
               </Button>
@@ -139,7 +136,6 @@ function MemoItem({ memo, isPriority }: { memo: Memo; isPriority?: boolean }) {
                   className="h-8 rounded-lg px-3 text-[11px] font-bold"
                   onClick={handleDelete}
                   disabled={isDeleting}
-                  tabIndex={-1}
                 >
                   {isDeleting ? (
                     <Loader2 className="mr-1.5 h-3 w-3 animate-spin" />
@@ -230,7 +226,6 @@ function CodeBlock({ code }: { code: string }) {
       <button
         onClick={handleCopy}
         className="absolute top-2 right-2 z-10 flex h-6 w-6 items-center justify-center rounded border border-border bg-background/80 backdrop-blur-sm transition-colors hover:bg-muted"
-        tabIndex={-1}
       >
         {copied ? (
           <Check className="h-3.5 w-3.5 text-green-600" />
