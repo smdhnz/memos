@@ -90,7 +90,8 @@ export function MemoInput({
     })
   }
 
-  async function handleSubmit() {
+  async function handleSubmit(e?: React.FormEvent | React.MouseEvent) {
+    e?.preventDefault()
     if (!content.trim() && attachments.length === 0) return
 
     setLoading(true)
@@ -130,104 +131,110 @@ export function MemoInput({
   }
 
   return (
-    <div className="flex w-full flex-col gap-2 rounded-none border-x-0 border-t border-b-0 bg-background/80 p-2 pb-[calc(2.5rem+env(safe-area-inset-bottom))] shadow-sm backdrop-blur-sm transition-all focus-within:px-2 focus-within:py-2 focus-within:pb-[calc(0.5rem+env(safe-area-inset-bottom))] sm:rounded-2xl sm:border sm:p-2 dark:border-t-white/20">
-      {attachments.length > 0 && (
-        <div className="mt-1 ml-2 flex flex-wrap gap-2">
-          {attachments.map((a, i) => (
-            <div
-              key={i}
-              className="group relative h-20 w-20 shrink-0 overflow-hidden rounded-lg border"
-            >
-              <Image
-                src={a.preview}
-                alt="preview"
-                fill
-                className="object-cover"
-              />
-              <div className="absolute inset-0 flex items-center justify-center gap-1 bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="h-6 w-6 text-white hover:bg-white/20"
-                  onClick={() => moveFile(i, "left")}
-                  disabled={i === 0}
-                  tabIndex={-1}
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="h-6 w-6 text-white hover:bg-white/20"
-                  onClick={() => removeFile(i)}
-                  tabIndex={-1}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="h-6 w-6 text-white hover:bg-white/20"
-                  onClick={() => moveFile(i, "right")}
-                  disabled={i === attachments.length - 1}
-                  tabIndex={-1}
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
+    <>
+      <input
+        type="file"
+        accept="image/*"
+        multiple
+        className="hidden"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        tabIndex={-1}
+        aria-hidden="true"
+      />
+      <form
+        onSubmit={handleSubmit}
+        className="flex w-full flex-col gap-2 rounded-none border-x-0 border-t border-b-0 bg-background/80 p-2 pb-[calc(2.5rem+env(safe-area-inset-bottom))] shadow-sm backdrop-blur-sm transition-all focus-within:px-2 focus-within:py-2 focus-within:pb-[calc(0.5rem+env(safe-area-inset-bottom))] sm:rounded-2xl sm:border sm:p-2 dark:border-t-white/20"
+      >
+        {attachments.length > 0 && (
+          <div className="mt-1 ml-2 flex flex-wrap gap-2">
+            {attachments.map((a, i) => (
+              <div
+                key={i}
+                className="group relative h-20 w-20 shrink-0 overflow-hidden rounded-lg border"
+              >
+                <Image
+                  src={a.preview}
+                  alt="preview"
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 flex items-center justify-center gap-1 bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="h-6 w-6 text-white hover:bg-white/20"
+                    onClick={() => moveFile(i, "left")}
+                    disabled={i === 0}
+                    tabIndex={-1}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="h-6 w-6 text-white hover:bg-white/20"
+                    onClick={() => removeFile(i)}
+                    tabIndex={-1}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="h-6 w-6 text-white hover:bg-white/20"
+                    onClick={() => moveFile(i, "right")}
+                    disabled={i === attachments.length - 1}
+                    tabIndex={-1}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+        )}
+        <div className="flex items-center gap-2">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="h-9 w-9 shrink-0 text-muted-foreground hover:bg-muted"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={loading}
+            tabIndex={-1}
+          >
+            <ImagePlus className="h-5 w-5" />
+          </Button>
+          <Textarea
+            ref={textareaRef}
+            placeholder={placeholder}
+            className="max-h-[200px] min-h-[40px] flex-1 resize-none border-none bg-transparent px-1 py-2.5 text-base leading-relaxed shadow-none focus-visible:ring-0 sm:text-sm"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            onKeyDown={handleKeyDown}
+            onPaste={handlePaste}
+            rows={1}
+          />
+          <Button
+            type="button"
+            size="icon"
+            className="h-9 w-9 shrink-0 rounded-xl shadow-sm transition-all active:scale-95"
+            disabled={loading || (!content.trim() && attachments.length === 0)}
+            onClick={handleSubmit}
+            tabIndex={-1}
+          >
+            {loading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Send className="h-4 w-4" />
+            )}
+          </Button>
         </div>
-      )}
-      <div className="flex items-center gap-2">
-        <input
-          type="file"
-          accept="image/*"
-          multiple
-          className="hidden"
-          ref={fileInputRef}
-          onChange={handleFileChange}
-          tabIndex={-1}
-        />
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          className="h-9 w-9 shrink-0 text-muted-foreground hover:bg-muted"
-          onClick={() => fileInputRef.current?.click()}
-          disabled={loading}
-          tabIndex={-1}
-        >
-          <ImagePlus className="h-5 w-5" />
-        </Button>
-        <Textarea
-          ref={textareaRef}
-          placeholder={placeholder}
-          className="max-h-[200px] min-h-[40px] flex-1 resize-none border-none bg-transparent px-1 py-2.5 text-base leading-relaxed shadow-none focus-visible:ring-0 sm:text-sm"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          onKeyDown={handleKeyDown}
-          onPaste={handlePaste}
-          rows={1}
-        />
-        <Button
-          type="button"
-          size="icon"
-          className="h-9 w-9 shrink-0 rounded-xl shadow-sm transition-all active:scale-95"
-          disabled={loading || (!content.trim() && attachments.length === 0)}
-          onClick={handleSubmit}
-          tabIndex={-1}
-        >
-          {loading ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Send className="h-4 w-4" />
-          )}
-        </Button>
-      </div>
-    </div>
+      </form>
+    </>
   )
 }
