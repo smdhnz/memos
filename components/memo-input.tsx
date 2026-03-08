@@ -130,7 +130,7 @@ export function MemoInput({
   }
 
   return (
-    <div className="flex w-full flex-col gap-2 rounded-none border-x-0 border-b-0 bg-background/80 p-2 pb-[calc(2.5rem+env(safe-area-inset-bottom))] shadow-sm backdrop-blur-sm transition-all focus-within:px-2 focus-within:py-2 focus-within:pb-[calc(0.5rem+env(safe-area-inset-bottom))] sm:rounded-2xl sm:border sm:p-2">
+    <div className="flex w-full flex-col gap-2 rounded-none border-x-0 border-t border-b-0 bg-background/80 p-2 pb-[calc(2.5rem+env(safe-area-inset-bottom))] shadow-sm backdrop-blur-sm transition-all focus-within:px-2 focus-within:py-2 focus-within:pb-[calc(0.5rem+env(safe-area-inset-bottom))] sm:rounded-2xl sm:border sm:p-2 dark:border-t-white/20">
       {attachments.length > 0 && (
         <div className="mt-1 ml-2 flex flex-wrap gap-2">
           {attachments.map((a, i) => (
@@ -152,6 +152,7 @@ export function MemoInput({
                   className="h-6 w-6 text-white hover:bg-white/20"
                   onClick={() => moveFile(i, "left")}
                   disabled={i === 0}
+                  tabIndex={-1}
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
@@ -161,6 +162,7 @@ export function MemoInput({
                   size="icon"
                   className="h-6 w-6 text-white hover:bg-white/20"
                   onClick={() => removeFile(i)}
+                  tabIndex={-1}
                 >
                   <X className="h-4 w-4" />
                 </Button>
@@ -171,6 +173,7 @@ export function MemoInput({
                   className="h-6 w-6 text-white hover:bg-white/20"
                   onClick={() => moveFile(i, "right")}
                   disabled={i === attachments.length - 1}
+                  tabIndex={-1}
                 >
                   <ChevronRight className="h-4 w-4" />
                 </Button>
@@ -196,6 +199,7 @@ export function MemoInput({
           className="h-9 w-9 shrink-0 text-muted-foreground hover:bg-muted"
           onClick={() => fileInputRef.current?.click()}
           disabled={loading}
+          tabIndex={-1}
         >
           <ImagePlus className="h-5 w-5" />
         </Button>
@@ -215,6 +219,7 @@ export function MemoInput({
           className="h-9 w-9 shrink-0 rounded-xl shadow-sm transition-all active:scale-95"
           disabled={loading || (!content.trim() && attachments.length === 0)}
           onClick={handleSubmit}
+          tabIndex={-1}
         >
           {loading ? (
             <Loader2 className="h-4 w-4 animate-spin" />
